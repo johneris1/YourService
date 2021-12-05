@@ -16,7 +16,9 @@ class LoginRepository {
       if (isEmailVerified()) {
         print('ok');
         message = 'ok';
-        Modular.to.popAndPushNamed('/selec-user');
+        auth.currentUser.displayName != null
+            ? Modular.to.popAndPushNamed('/main-navigation')
+            : Modular.to.popAndPushNamed('/selec-user');
       }
       return message ?? 'Confirme seu e-mail e tente fazer login novamente!';
     } on FirebaseAuthException catch (e) {

@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:yoursevice/routers/cadastro.module.dart';
 import 'package:yoursevice/routers/login.module.dart';
+import 'package:yoursevice/routers/main.navigation.module.dart';
 import 'package:yoursevice/routers/select.user.module.dart';
+import 'package:yoursevice/routers/user.module.dart';
 import 'package:yoursevice/shared/custom.dio.dart';
 import 'package:yoursevice/views/pages/boas.vindas.page.dart';
 
@@ -43,7 +45,9 @@ class AppModule extends MainModule {
             child: (_, args) => BoasVindasPage()),
         ModularRouter('/cadastro', module: CadastroModule()),
         ModularRouter('/login', module: LoginModule()),
+        ModularRouter('/user', module: UserModule()),
         ModularRouter('/selec-user', module: SelectUserModule()),
+        ModularRouter('/main-navigation', module: MainNavigationModule()),
       ];
   List<Bind> get binds => [
         Bind((i) => CustomDio()),
