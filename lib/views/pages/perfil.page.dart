@@ -2,37 +2,29 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:yoursevice/controller/perfil.controller.dart';
 import 'package:yoursevice/validators/validators.dart';
 import 'package:yoursevice/views/widgets/custom.textfield.dart';
 import 'package:yoursevice/views/widgets/loading.dialog.dart';
 
-class CadastroSolicitantePageOne extends StatefulWidget {
-  const CadastroSolicitantePageOne({Key key}) : super(key: key);
+class PerfilPageOne extends StatefulWidget {
+  const PerfilPageOne({Key key}) : super(key: key);
 
   @override
-  _CadastroSolicitantePageOneState createState() =>
-      _CadastroSolicitantePageOneState();
+  _PerfilPageOneState createState() => _PerfilPageOneState();
 }
 
-class _CadastroSolicitantePageOneState
-    extends State<CadastroSolicitantePageOne> {
+class _PerfilPageOneState extends State<PerfilPageOne> {
   GlobalKey<FormState> solicitForm = GlobalKey<FormState>();
   FirebaseAuth auth = FirebaseAuth.instance;
   var db = FirebaseFirestore.instance;
-  final nome = TextEditingController();
-  final dataNascimento = TextEditingController();
-  final cep = TextEditingController();
-  final telefone = TextEditingController();
-  final nomeUser = TextEditingController();
+  var perfilController = Modular.get<PerfilController>();
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
-        appBar: AppBar(
-          title: Text('Cadastro de Usuario'),
-          leading: Container(),
-        ),
+        appBar: AppBar(title: Text('Meu Perfil'), leading: Container()),
         body: SingleChildScrollView(
           child: Form(
             key: solicitForm,
@@ -48,7 +40,7 @@ class _CadastroSolicitantePageOneState
                       child: Text('Nome:'),
                     ),
                     CustomTextField(
-                      controller: nome,
+                      controller: perfilController.nome,
                       validator: InputValidators.nameCompletIsValid,
                       validatorText: 'Insira um texto válido',
                       hintText: '',
@@ -59,7 +51,7 @@ class _CadastroSolicitantePageOneState
                       child: Text('Nome de Usuario:'),
                     ),
                     CustomTextField(
-                      controller: nomeUser,
+                      controller: perfilController.nomeUser,
                       validator: InputValidators.nameUserIsValid,
                       validatorText: 'Insira um texto válido',
                       hintText: '',
@@ -70,7 +62,7 @@ class _CadastroSolicitantePageOneState
                       child: Text('Data de Nascimento:'),
                     ),
                     CustomTextField(
-                      controller: dataNascimento,
+                      controller: perfilController.dataNascimento,
                       validator: InputValidators.dateIsValid,
                       validatorText: 'Insira um texto válido',
                       hintText: 'Data de Nascimento',
@@ -81,7 +73,7 @@ class _CadastroSolicitantePageOneState
                       child: Text('Cep:'),
                     ),
                     CustomTextField(
-                      controller: cep,
+                      controller: perfilController.cep,
                       validator: InputValidators.cepIsValid,
                       validatorText: 'Insira um texto válido',
                       hintText: '',
@@ -92,11 +84,43 @@ class _CadastroSolicitantePageOneState
                       child: Text('Telefone:'),
                     ),
                     CustomTextField(
-                      controller: telefone,
+                      controller: perfilController.telefone,
                       validator: InputValidators.phoneIsValid,
                       validatorText: 'Insira um texto válido',
                       hintText: '',
                       onChange: (value) {},
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 20, bottom: 5),
+                      child: Text('CPF:'),
+                    ),
+                    Visibility(
+                      visible: perfilController.isOfffer,
+                      child: CustomTextField(
+                        controller: perfilController.cpf,
+                        validatorText: 'Insira um texto válido',
+                        hintText: '',
+                        onChange: (value) {},
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    InkWell(
+                      onTap: () {
+                        LoadingDialog(context);
+                        perfilController.deletSolicitante();
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text('Quer apagar sua conta? '),
+                          Text(
+                            ' Clique aqui',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black),
+                          ),
+                        ],
+                      ),
                     ),
                     SizedBox(height: 20),
                     Center(
@@ -106,33 +130,17 @@ class _CadastroSolicitantePageOneState
                           color: Colors.blue,
                         ),
                         child: MaterialButton(
-                            child: Text('Cadastrar'),
+                            child: Text('Salvar'),
                             onPressed: () {
+                              print('oi');
                               LoadingDialog(context);
-                              auth.currentUser
-                                  .updateProfile(displayName: nomeUser.text)
-                                  .whenComplete(() {
-                                print(auth.currentUser.displayName);
-                                db
-                                    .collection('usuario')
-                                    .add({
-                                      'isOfertante': false,
-                                      'nome': nome.text,
-                                      'data_nascimento': dataNascimento.text,
-                                      'email': auth.currentUser.email,
-                                      'cep': cep.text,
-                                      'telefone': telefone.text,
-                                    })
-                                    .then((value) {})
-                                    .whenComplete(() {
-                                      Modular.to.pop();
-                                      Modular.to.pushReplacementNamed(
-                                          '/main-navigation');
-                                    });
-                              });
+                              perfilController.isOfffer == false
+                                  ? perfilController.updatePerfil()
+                                  : perfilController.updatePerfilOffert();
                             }),
                       ),
                     ),
+                    SizedBox(height: 10),
                   ],
                 ),
               ),

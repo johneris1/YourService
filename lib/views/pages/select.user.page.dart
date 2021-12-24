@@ -59,7 +59,7 @@ class _SelectUserPageState extends State<SelectUserPage> {
                   ),
                   child: FlatButton(
                       onPressed: () {
-                        print('ofertante');
+                        Modular.to.pushNamed('/selec-user/cadastro-ofertante');
                       },
                       child: Text(
                         'Ofertar Serviços',

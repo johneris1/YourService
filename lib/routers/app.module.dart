@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:yoursevice/controller/open.service.controller.dart';
+import 'package:yoursevice/controller/perfil.controller.dart';
+import 'package:yoursevice/routers/busca.module.dart';
 import 'package:yoursevice/routers/cadastro.module.dart';
+import 'package:yoursevice/routers/home.module.dart';
 import 'package:yoursevice/routers/login.module.dart';
 import 'package:yoursevice/routers/main.navigation.module.dart';
 import 'package:yoursevice/routers/select.user.module.dart';
@@ -48,9 +52,13 @@ class AppModule extends MainModule {
         ModularRouter('/user', module: UserModule()),
         ModularRouter('/selec-user', module: SelectUserModule()),
         ModularRouter('/main-navigation', module: MainNavigationModule()),
+        ModularRouter('/busca', module: BuscaModule()),
+        ModularRouter('/home', module: HomeModule()),
       ];
   List<Bind> get binds => [
         Bind((i) => CustomDio()),
+        Bind((i) => PerfilController()),
+        Bind((i) => OpenServiceController()),
       ];
   @override
   Widget get bootstrap => AppWidget();

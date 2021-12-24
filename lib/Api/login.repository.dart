@@ -1,10 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
+import 'package:yoursevice/controller/perfil.controller.dart';
 
 class LoginRepository {
   FirebaseAuth auth = FirebaseAuth.instance;
   String message = '';
+  var perfilController = Modular.get<PerfilController>();
 
   Future signIn(String email, String password) async {
     try {
@@ -16,9 +18,13 @@ class LoginRepository {
       if (isEmailVerified()) {
         print('ok');
         message = 'ok';
-        auth.currentUser.displayName != null
-            ? Modular.to.popAndPushNamed('/main-navigation')
-            : Modular.to.popAndPushNamed('/selec-user');
+        perfilController.getServicosUserGeral();
+        perfilController.getInfo().whenComplete(() {
+          print(perfilController.isOfffer);
+          auth.currentUser.displayName != null
+              ? Modular.to.popAndPushNamed('/main-navigation')
+              : Modular.to.popAndPushNamed('/selec-user');
+        });
       }
       return message ?? 'Confirme seu e-mail e tente fazer login novamente!';
     } on FirebaseAuthException catch (e) {

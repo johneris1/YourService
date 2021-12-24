@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:yoursevice/controller/main_navigation.controller.dart';
+import 'package:yoursevice/controller/perfil.controller.dart';
+import 'package:yoursevice/routers/busca.module.dart';
+import 'package:yoursevice/routers/home.module.dart';
 import 'package:yoursevice/routers/user.module.dart';
 import 'package:yoursevice/views/widgets/button,navigation.widget.dart';
 
@@ -12,6 +15,7 @@ class MainNavigationPage extends StatefulWidget {
 
 class _MainNavigationPageState extends State<MainNavigationPage> {
   final mainNavController = Modular.get<MainNavigationController>();
+  var perfilController = Modular.get<PerfilController>();
 
   @override
   Widget build(BuildContext context) {
@@ -22,17 +26,12 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
         physics: NeverScrollableScrollPhysics(),
         controller: mainNavController.pageViewController,
         children: [
-          Container(
-            child: Center(child: Text('home')),
-          ),
+          RouterOutlet(module: HomeModule()),
           RouterOutlet(module: UserModule()),
           Container(
             child: Center(child: Text('sobre')),
           ),
-          Container(
-            child: Center(child: Text('busca')),
-          ),
-
+          RouterOutlet(module: BuscaModule()),
           // RouterOutlet(module: QuizModule()),
           // RouterOutlet(module: AjudaModule()),
           // RouterOutlet(module: BuscarModule()),
@@ -67,6 +66,12 @@ class _MainNavigationPageState extends State<MainNavigationPage> {
                         onTap: (index) {
                           mainNavController.pageViewController
                               .jumpToPage(index);
+                          print(index);
+                          if (index == 3) {
+                            setState(() {
+                              perfilController.getServicosUserGeral();
+                            });
+                          }
                         },
                         items: [
                           customNavItemStatic(

@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_modular/flutter_modular.dart';
 import 'package:yoursevice/Api/login.repository.dart';
+import 'package:yoursevice/controller/perfil.controller.dart';
 import 'package:yoursevice/validators/validators.dart';
 
 import 'package:yoursevice/views/widgets/custom.iconbutton.dart';
@@ -15,6 +16,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final email = TextEditingController();
   final senha = TextEditingController();
+  var perfilController = Modular.get<PerfilController>();
 
   bool _isDoneSignIn = false, _isLoadingSignIn = false;
   String _message = '';
